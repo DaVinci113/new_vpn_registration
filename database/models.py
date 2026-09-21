@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from sqlalchemy import DateTime, func
+from sqlalchemy import DateTime, func, ForeignKey
 
 
 class Base(DeclarativeBase):
@@ -17,7 +17,13 @@ class User(Base):
     free_plan: Mapped[bool] = mapped_column(default=True)
     start_free_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     end_free_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    start_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    end_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    start_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    end_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     wallet: Mapped[int] = mapped_column(default=0)
-    connected_devices: Mapped[int] = mapped_column(default=0)
+
+class Device(Base):
+    __tablename__ = "devices"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    uuid: Mapped[str]

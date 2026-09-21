@@ -4,10 +4,13 @@ from aiogram.filters import Command
 from aiogram.types import Message
 
 from hiddify.request import add_period
-from telegram_bot.message_templates import instruction_message
+from telegram_bot.message_templates import instruction_message, wishes_message
+
+from hiddify.config import plan
 
 import logging
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 router = Router()
@@ -41,16 +44,20 @@ async def info(message: Message):
     await message.answer(instruction_message)
 
 @router.message(F.text.lower() == "подключить устройство")
-async def add_device(message: Message, ext_session: aiohttp.client.ClientSession):
+async def add_device(message: Message):
     user_id = message.from_user.id
     logger.info(f"User:{user_id} выбрал "
                 f"Подключение устройства")
     user_name = message.from_user.full_name
     logger.debug(f"user_id::{user_id}, user_name::{user_name}")
+
+    user_plan = plan["trial"]
+
     await add_period(
         user_name=user_name,
         telegram_id=user_id,
-        session=ext_session,
+        duration=30,
+        volume=user_plan["volume"],
     )
     await message.reply("подключить устройство")
 
@@ -69,4 +76,4 @@ async def wishes(message: Message):
     user_id = message.from_user.id
     logger.info(f"User:{user_id} выбрал "
                 f"Пожелания")
-    await message.reply("пожелания")
+    await message.reply(wishes_message)
