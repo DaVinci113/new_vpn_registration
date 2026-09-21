@@ -47,6 +47,8 @@ async def check_ip(ip):
 if __name__ == '__main__':
     session = None
     if asyncio.run(check_ip(IP)):
+        logger.debug(f"ip::{IP}")
+        logger.info(f"Запуск через прокси")
         proxy_session = AiohttpSession(proxy=proxy_server)
         session = proxy_session
     bot = Bot(
