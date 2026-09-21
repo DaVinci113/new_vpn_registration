@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from typing import AsyncIterator, Annotated
+from typing import AsyncIterator
 
 from pydantic import with_config
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
@@ -16,7 +16,3 @@ async def session_scope() -> AsyncIterator[AsyncSession]:
         except Exception:
             await session.rollback()
             raise
-
-async def get_session():
-    async with session_scope() as session:
-        yield session
