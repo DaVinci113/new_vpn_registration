@@ -11,6 +11,7 @@ import logging
 from dotenv import load_dotenv
 import os
 
+from database.services import create_table
 from telegram_bot.handlers import router
 
 logging.basicConfig(level=logging.INFO)
@@ -27,6 +28,7 @@ dp = Dispatcher()
 async def main():
     async with aiohttp.ClientSession() as ext_session:
         try:
+            await create_table()
             dp["ext_session"] = ext_session
             dp.include_router(router)
             await bot.delete_webhook(drop_pending_updates=True)
