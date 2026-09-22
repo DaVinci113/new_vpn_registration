@@ -12,11 +12,9 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    telegram_id: Mapped[int]
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    telegram_id: Mapped[int] = mapped_column(unique=True)
     free_plan: Mapped[bool] = mapped_column(default=True)
-    start_free_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    end_free_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    start_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    end_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    start_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    end_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     wallet: Mapped[int] = mapped_column(default=0)
