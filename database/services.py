@@ -19,7 +19,10 @@ class UserService:
         self.session = session
 
     async def create(self, user: UserCreate):
-        new_user = User(telegram_id=user.telegram_id)
+        new_user = User(
+            telegram_id=user.telegram_id,
+            end_plan=user.end_plan,
+        )
         self.session.add(new_user)
         await self.session.commit()
         await self.session.refresh(new_user)
@@ -32,7 +35,10 @@ class UserService:
         query = select(User).where(User.telegram_id == telegram_id)
         result = await self.session.execute(query)
         user = result.scalar_one_or_none()
+        if user is None:
+            return None
         return UserResponse.model_validate(user)
+
 
     async def get_all_users(self):
         query = select(User)
