@@ -3,8 +3,12 @@ from typing import AsyncIterator
 
 from pydantic import with_config
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from pathlib import Path
 
-url = 'sqlite+aiosqlite:///database/db.sqlite'
+BASE_DIR = Path(__file__).resolve().parent.parent
+DB_FILE = BASE_DIR / 'database' / 'db.sqlite3'
+
+url = f'sqlite+aiosqlite:///{DB_FILE}'
 engine = create_async_engine(url=url, future=True)
 async_session_maker = async_sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession)
 
