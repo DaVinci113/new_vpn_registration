@@ -52,7 +52,21 @@ async def main():
         all_users = await user.get_all_users()
         print(all_users)
 
+async def make_user_payed(user_id: int):
+    async with session_scope() as session:
+        user = select(User).where(User.telegram_id == user_id)
+        db_user = await session.execute(user)
+        change_user = db_user.scalar_one_or_none()
+        change_user.free_plan = False
+        print(f"{change_user.telegram_id}\n"
+              f"{change_user.free_plan}\n"
+              f"{change_user.end_plan}")
+        await session.commit()
+        await session.refresh(change_user)
+
+
 if __name__ == '__main__':
-    asyncio.run(main())
+    asyncio.run(make_user_payed(6305024563))
+    # asyncio.run(main())
 
 
