@@ -3,12 +3,13 @@ from datetime import datetime, timedelta
 import aiohttp
 from aiogram import Router, types, F
 from aiogram.filters import Command
-from aiogram.types import Message
+from aiogram.types import Message, FSInputFile
 
 from database.schemas import UserCreate
 from database.services import UserService
 from hiddify.request import add_device, check_user_device
-from telegram_bot.message_templates import instruction_message, wishes_message
+from qr_code.qr_generate import Link
+from telegram_bot.message_templates import instruction_message, wishes_message, info_message
 
 from hiddify.config import plan
 
@@ -50,7 +51,7 @@ async def info(message: Message):
     user_id = message.from_user.id
     logger.info(f"User_id:{user_id} выбрал "
                 f"инфо")
-    await  message.reply("инфо")
+    await  message.reply(info_message)
 
 @router.message(F.text.lower() == "инструкция")
 async def instruction(message: Message):
@@ -82,13 +83,19 @@ async def add_device_to_user(message: Message, user_repo: UserService):
         if user_data.free_plan:
             await message.reply("Можете оплатить подписку и у Вас появится возможность подключить еще 3 устройства. И безлимит")
         return
-    await add_device(
+    connect_data = await add_device(
         user_name=user_name,
         telegram_id=user_id,
         duration=30,
         volume=volume,
     )
-    await message.reply("подключить устройство")
+    uuid_connect = connect_data["uuid"]
+    link_generator = Link(name=user_name, user_id=user_id, uuid=uuid_connect)
+    link = link_generator.generate_link()
+    qr_path = link_generator.generate_qr_code()
+    qr_file = FSInputFile(qr_path)
+    await message.answer(link)
+    await message.answer_photo(qr_file)
 
 
 @router.message(F.text.lower() == "подписка")
