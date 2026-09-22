@@ -11,6 +11,7 @@ import logging
 from dotenv import load_dotenv
 import os
 
+from core.middlewares.databs import DatabaseMiddleware
 from database.services import create_table
 from telegram_bot.handlers import router
 
@@ -23,9 +24,31 @@ token = os.getenv("TELEGRAM_TOKEN")
 proxy_server = os.getenv("PROXY_SERVER")
 IP = os.getenv("RUS_IP")
 
-dp = Dispatcher()
+
+async def check_ip(ip):
+    url = "https://ifconfig.me/"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            response = await resp.text()
+            return ip in response
 
 async def main():
+    dp = Dispatcher()
+    # Подключаем Middleware ко всем сообщениям (и коллбэкам, если нужно)
+    # Можно сделать dp.message.middleware(...) и dp.callback_query.middleware(...)
+    dp.message.middleware(DatabaseMiddleware())
+    dp.callback_query.middleware(DatabaseMiddleware())
+    session = None
+    if await check_ip(IP):
+        logger.debug(f"ip::{IP}")
+        logger.info(f"Запуск через прокси")
+        proxy_session = AiohttpSession(proxy=proxy_server)
+        session = proxy_session
+    bot = Bot(
+        token=token,
+        session=session,
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+    )
     async with aiohttp.ClientSession() as ext_session:
         try:
             await create_table()
@@ -36,24 +59,6 @@ async def main():
         finally:
             await bot.session.close()
 
-async def check_ip(ip):
-    url = "https://ifconfig.me/"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resp:
-            response = await resp.text()
-            return ip in response
-
 
 if __name__ == '__main__':
-    session = None
-    if asyncio.run(check_ip(IP)):
-        logger.debug(f"ip::{IP}")
-        logger.info(f"Запуск через прокси")
-        proxy_session = AiohttpSession(proxy=proxy_server)
-        session = proxy_session
-    bot = Bot(
-        token=token,
-        session=session,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
-    )
     asyncio.run(main())

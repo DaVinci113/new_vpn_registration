@@ -1,3 +1,5 @@
+import asyncio
+
 import aiohttp
 import datetime
 import os
@@ -47,7 +49,7 @@ def payload(user_name, telegram_id, volume, duration):
 
     return payload_period
 
-async def add_period(user_name: str, telegram_id: int, volume: int, duration: int) -> dict:
+async def add_device(user_name: str, telegram_id: int, volume: int, duration: int) -> dict:
     """Тариф для пользователя, формирование json и его POST-запрос по API"""
 
     logger.info(f"User_id {telegram_id}, Добавление периода, "
@@ -67,7 +69,33 @@ async def add_period(user_name: str, telegram_id: int, volume: int, duration: in
         "uuid": resp["uuid"],
         "telegram_id": resp["telegram_id"],
     }
-    logger.info(f"User_id:{telegram_id}, Добавление периода "
-                f"Получение данных {connect_data} "
-                f"user_name {user_name}")
+
     return connect_data
+
+async def all_data() -> list:
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(hiddify_add_user_url, headers=headers) as response:
+                result = await response.json()
+                logger.info(f"всего устройств: {len(result)}")
+    except Exception as ex:
+        logger.error(f"Неудачный запрос, {ex}")
+        result = None
+    return result
+
+async def check_user_device(telegram_id: int) -> int:
+    data = await all_data()
+    device_count = 0
+    if len(data) > 0:
+        for device in data:
+            try:
+                if device["telegram_id"] == telegram_id:
+                    device_count += 1
+            except Exception as ex:
+                logger.error(f"user: {telegram_id} - ошибка {ex}")
+    logger.info(f"user: {telegram_id} - {device_count} устройств")
+    return device_count
+
+
+if __name__ == '__main__':
+    asyncio.run(check_user_device(6305024563))

@@ -20,10 +20,3 @@ class User(Base):
     start_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     end_plan: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     wallet: Mapped[int] = mapped_column(default=0)
-
-class Device(Base):
-    __tablename__ = "devices"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    uuid: Mapped[str]

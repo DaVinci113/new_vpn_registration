@@ -4,7 +4,7 @@ from typing import AsyncIterator
 from pydantic import with_config
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-url = 'sqlite+aiosqlite:///db.sqlite'
+url = 'sqlite+aiosqlite:///database/db.sqlite'
 engine = create_async_engine(url=url, future=True)
 async_session_maker = async_sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession)
 
