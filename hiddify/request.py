@@ -98,4 +98,5 @@ async def check_user_device(telegram_id: int) -> int:
 
 
 if __name__ == '__main__':
-    asyncio.run(check_user_device(6305024563))
+    result = asyncio.run(check_user_device(6305024563))
+    print(result)
