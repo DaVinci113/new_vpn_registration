@@ -6,7 +6,7 @@ from typing import List
 
 class UserCreate(BaseModel):
     telegram_id: int
-    end_free_plan: datetime
+    end_plan: datetime
 
 
 class UserUpdate(BaseModel):
@@ -23,8 +23,6 @@ class UserResponse(BaseModel):
     id: int
     telegram_id: int
     free_plan: bool
-    start_free_plan: datetime
-    end_free_plan: datetime
     start_plan: datetime
     end_plan: datetime
     wallet: int
