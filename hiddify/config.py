@@ -1,5 +1,4 @@
 import os
-from calendar import month
 
 from dotenv import load_dotenv
 
@@ -14,9 +13,9 @@ headers = {
 }
 
 plan = {"plan": {"volume": 500,
-         "duration": "month",
+         "duration": 30,
                  "devices": 4},
         "trial": {"volume": 50,
-             "duration": "month",
+             "duration": 30,
                   "devices": 1},
         }

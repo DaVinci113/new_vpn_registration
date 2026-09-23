@@ -1,9 +1,8 @@
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import AsyncIterator
-
-from pydantic import with_config
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from pathlib import Path
+
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DB_FILE = BASE_DIR / 'database' / 'db.sqlite3'

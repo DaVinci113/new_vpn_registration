@@ -1,15 +1,13 @@
 import asyncio
+import logging
+import os
 
 import aiohttp
 from aiogram import Bot, Dispatcher
-from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.client.default import DefaultBotProperties
+from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums import ParseMode
-
-import logging
-
 from dotenv import load_dotenv
-import os
 
 from core.middlewares.databs import DatabaseMiddleware
 from database.services import create_table
@@ -27,10 +25,9 @@ IP = os.getenv("RUS_IP")
 
 async def check_ip(ip):
     url = "https://ifconfig.me/"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resp:
-            response = await resp.text()
-            return ip in response
+    async with aiohttp.ClientSession() as session, session.get(url) as resp:
+        response = await resp.text()
+        return ip in response
 
 async def main():
     dp = Dispatcher()
@@ -41,7 +38,7 @@ async def main():
     session = None
     if await check_ip(IP):
         logger.debug(f"ip::{IP}")
-        logger.info(f"Запуск через прокси")
+        logger.info("Запуск через прокси")
         proxy_session = AiohttpSession(proxy=proxy_server)
         session = proxy_session
     bot = Bot(

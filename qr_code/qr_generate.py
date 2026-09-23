@@ -1,10 +1,8 @@
-from PIL import Image, ImageDraw
-from dotenv import load_dotenv
 import os
-import qrcode
 from pathlib import Path
 
-
+import qrcode
+from dotenv import load_dotenv
 
 load_dotenv()
 
