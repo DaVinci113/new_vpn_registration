@@ -1,32 +1,40 @@
+import logging
+import os
 from datetime import datetime, timedelta
 
-import aiohttp
-from aiogram import Router, types, F
+from aiogram import F, Router, types
 from aiogram.filters import Command
-from aiogram.types import Message, FSInputFile
+from aiogram.types import FSInputFile, Message
 
 from database.schemas import UserCreate
 from database.services import UserService
+from hiddify.config import plan
 from hiddify.request import add_device, check_user_device
 from qr_code.qr_generate import Link
-from telegram_bot.message_templates import instruction_message, wishes_message, info_message
+from telegram_bot.message_templates import (
+    info_message,
+    instruction_message,
+    wishes_message, payment_message,
+)
 
-from hiddify.config import plan
-
-import logging
+from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 router = Router()
+load_dotenv()
+
+admin_id = os.getenv("ADMIN_TG_ID")
+
 
 @router.message(Command("start"))
 async def cmd_start(message: Message, user_repo: UserService):
     user_id = message.from_user.id
     logger.info(f"User_id:{user_id} start bot")
     current_date = datetime.now()
-    if user:= await user_repo.get_user_by_telegram_id(user_id):
+    if await user_repo.get_user_by_telegram_id(user_id):
         user_name = message.from_user.username
         await message.reply(f"С возвращением {user_name}")
         return
@@ -43,6 +51,7 @@ async def cmd_start(message: Message, user_repo: UserService):
         [types.KeyboardButton(text="Подписка")],
         [types.KeyboardButton(text="Пожелания")],
     ]
+
     keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
     await message.answer("Выберете пункт в меню", reply_markup=keyboard)
 
@@ -74,9 +83,11 @@ async def add_device_to_user(message: Message, user_repo: UserService):
     if user_data.free_plan:
         volume = plan["trial"]["volume"]
         devices_count = plan["trial"]["devices"]
+        duration = plan["trial"]["duration"]
     else:
         volume = plan["plan"]["volume"]
         devices_count = plan["plan"]["devices"]
+        duration = plan["plan"]["duration"]
     user_devices = await check_user_device(user_id)
     if user_devices >= devices_count:
         await message.reply("К сожалению Вы не можете подключить больше устройств(((")
@@ -86,7 +97,7 @@ async def add_device_to_user(message: Message, user_repo: UserService):
     connect_data = await add_device(
         user_name=user_name,
         telegram_id=user_id,
-        duration=30,
+        duration=duration,
         volume=volume,
     )
     uuid_connect = connect_data["uuid"]
@@ -103,8 +114,9 @@ async def subscribe(message: Message):
     user_id = message.from_user.id
     logger.info(f"User:{user_id} выбрал "
                 f"оплатить")
-    await  message.reply("Ваш ID для указания при оплате:\n"
+    await  message.answer("Ваш ID для указания при оплате:\n"
                          f"{user_id}")
+    await message.answer(payment_message)
 
 
 @router.message(F.text.lower() == "пожелания")
@@ -113,3 +125,5 @@ async def wishes(message: Message):
     logger.info(f"User:{user_id} выбрал "
                 f"Пожелания")
     await message.reply(wishes_message)
+
+
