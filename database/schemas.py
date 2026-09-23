@@ -1,22 +1,12 @@
 from datetime import datetime
+from typing import Optional
 
-from pydantic import BaseModel, ConfigDict
-from typing import List
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class UserCreate(BaseModel):
     telegram_id: int
     end_plan: datetime
-
-
-class UserUpdate(BaseModel):
-    id: int
-    telegram_id: str
-    free_plan: bool
-    wallet: int
-    start_plan: datetime
-    end_plan: datetime
-    wallet: int
 
 
 class UserResponse(BaseModel):
@@ -29,8 +19,16 @@ class UserResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class UserUpdate(BaseModel):
+    free_plan: Optional[bool] = None
+    start_plan: Optional[datetime] = None
+    end_plan: Optional[datetime] = None
+    wallet: Optional[int] = Field(default=None, ge=0)
+
+    model_config = {'extra': 'forbid'}
+
 
 class AddUserDevice(BaseModel):
     telegram_id: str
-    uuid: List[str] | None
+    uuid: Optional[str] = None
 
