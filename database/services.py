@@ -1,10 +1,11 @@
+import asyncio
+from datetime import datetime
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-import asyncio
 
-from database.models import Base
 from database.db import engine, session_scope
-from database.models import User
+from database.models import Base, User
 from database.schemas import UserCreate, UserResponse, UserUpdate
 
 
@@ -28,17 +29,25 @@ class UserService:
         await self.session.refresh(new_user)
         return UserResponse.model_validate(new_user)
 
-    async def update(self, user: UserUpdate):
-        pass
+    async def update(self, telegram_id, user_update: UserUpdate):
+        # Получаем только переданные поля (исключаем None)
+        update_data = user_update.model_dump(exclude_unset=True)
+        if not update_data:
+            return None
+        user = await self._get_user_by_telegram_id(telegram_id)
+        if user is None:
+            return None
+        for key, value in update_data.items():
+            setattr(user, key, value)
+        await self.session.commit()
+        await self.session.refresh(user)
+        return UserResponse.model_validate(user)
 
     async def get_user_by_telegram_id(self, telegram_id: int):
-        query = select(User).where(User.telegram_id == telegram_id)
-        result = await self.session.execute(query)
-        user = result.scalar_one_or_none()
+        user = self._get_user_by_telegram_id(telegram_id)
         if user is None:
             return None
         return UserResponse.model_validate(user)
-
 
     async def get_all_users(self):
         query = select(User)
@@ -46,27 +55,36 @@ class UserService:
         users = result.scalars().all()
         return [UserResponse.model_validate(user) for user in users]
 
+    async def _get_user_by_telegram_id(self, telegram_id: int)->User:
+        query = select(User).where(User.telegram_id == telegram_id)
+        result = await self.session.execute(query)
+        user = result.scalar_one_or_none()
+        return user
+
 async def main():
     async with session_scope() as session:
         user = UserService(session)
         all_users = await user.get_all_users()
-        print(all_users)
+        print(len(all_users))
+        for user in all_users:
+            print(f"{user.telegram_id} free_plan:{user.free_plan} start_plan:{user.start_plan}\n")
 
-async def make_user_payed(user_id: int):
+async def update_user_with_fields(telegram_id: int, data: UserUpdate):
     async with session_scope() as session:
-        user = select(User).where(User.telegram_id == user_id)
-        db_user = await session.execute(user)
-        change_user = db_user.scalar_one_or_none()
-        change_user.free_plan = False
-        print(f"{change_user.telegram_id}\n"
-              f"{change_user.free_plan}\n"
-              f"{change_user.end_plan}")
-        await session.commit()
-        await session.refresh(change_user)
+        service = UserService(session)
+        user = await service.update(telegram_id, data)
+        return UserResponse.model_validate(user)
 
 
 if __name__ == '__main__':
-    asyncio.run(make_user_payed(6305024563))
+    # asyncio.run(make_user_payed(6305024563))
+    data = {
+        'free_plan': False,
+        'start_plan': datetime(2020, 1, 1),
+    }
+    new_data = UserUpdate(**data)
     # asyncio.run(main())
+    res = asyncio.run(update_user_with_fields(telegram_id=470946767, data=new_data))
+    print(res)
 
 
