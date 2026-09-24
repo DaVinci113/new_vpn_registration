@@ -44,7 +44,7 @@ class UserService:
         return UserResponse.model_validate(user)
 
     async def get_user_by_telegram_id(self, telegram_id: int):
-        user = self._get_user_by_telegram_id(telegram_id)
+        user = await self._get_user_by_telegram_id(telegram_id)
         if user is None:
             return None
         return UserResponse.model_validate(user)
