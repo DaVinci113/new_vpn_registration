@@ -25,9 +25,13 @@ IP = os.getenv("RUS_IP")
 
 async def check_ip(ip):
     url = "https://ifconfig.me/"
-    async with aiohttp.ClientSession() as session, session.get(url) as resp:
-        response = await resp.text()
-        return ip in response
+    try:
+        async with aiohttp.ClientSession() as session, session.get(url) as resp:
+            response = await resp.text()
+            return ip in response
+    except aiohttp.ClientConnectorError:
+        logger.error("Ошибка распознавания IP")
+        return False
 
 async def main():
     dp = Dispatcher()
