@@ -26,13 +26,17 @@ load_dotenv()
 admin_id = os.getenv("ADMIN_TG_ID")
 
 def download_keyboard():
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text="Android", callback_data="Android")],
-            [InlineKeyboardButton(text="IOS", callback_data="IOS")],
-            [InlineKeyboardButton(text="Windows", callback_data="Windows")],
-        ]
-    )
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Android", callback_data="Android")
+    builder.button(text="IOS", callback_data="IOS")
+    builder.button(text="Windows", callback_data="Windows")
+    return builder.as_markup()
+    #     inline_keyboard=[
+    #         [InlineKeyboardButton(text="Android", callback_data="Android")],
+    #         [InlineKeyboardButton(text="IOS", callback_data="IOS")],
+    #         [InlineKeyboardButton(text="Windows", callback_data="Windows")],
+    #     ]
+    # )
 
 
 
@@ -64,9 +68,9 @@ async def cmd_start(message: Message, user_repo: UserService):
     await message.answer("Выберете пункт в меню", reply_markup=keyboard)
 
 @router.callback_query(F.text.lower() == "ссылки на скачивание")
-async def show_download_links(callback_query: CallbackQuery):
-    user_id = callback_query.from_user.id
-    await callback_query.message.edit_text(reply_markup=download_keyboard())
+async def show_download_links(callback: CallbackQuery):
+    user_id = callback.from_user.id
+    await callback.message.edit_text("Выберете Вашу платформу", reply_markup=download_keyboard())
 
 
 @router.message(F.text.lower() == "инфо")
