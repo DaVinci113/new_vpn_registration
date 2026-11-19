@@ -23,7 +23,7 @@ def payload(user_name, telegram_id, volume, duration):
     current_date = str(datetime.date.today())
 
     payload_period = {
-        "added_by_uuid": "ME",
+        "added_by_uuid": None,
         "comment": None,
         "current_usage_GB": 0,
         "ed25519_private_key": "string",
