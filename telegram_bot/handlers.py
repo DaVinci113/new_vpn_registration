@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 
 from aiogram import F, Router, types
 from aiogram.filters import Command
-from aiogram.types import FSInputFile, Message
+from aiogram.types import FSInputFile, Message, CallbackQuery, InlineKeyboardMarkup
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from database.schemas import UserCreate
 from database.services import UserService
@@ -24,6 +25,13 @@ load_dotenv()
 
 admin_id = os.getenv("ADMIN_TG_ID")
 
+async def download_keyboard():
+    builder = InlineKeyboardBuilder()
+    builder.buttons(text="Android", call_back="Android")
+    builder.buttons(text="IOS", call_back="IOS")
+    builder.buttons(text="Windows", call_back="Windows")
+    builder.adjust(1, 1, 1, 1)
+    return builder.as_markup()
 
 @router.message(Command("start"))
 async def cmd_start(message: Message, user_repo: UserService):
@@ -51,6 +59,12 @@ async def cmd_start(message: Message, user_repo: UserService):
 
     keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
     await message.answer("Выберете пункт в меню", reply_markup=keyboard)
+
+@router.callback_query(F.text.lower() == "ссылки на скачивание")
+async def show_download_links(callback_query: CallbackQuery):
+    user_id = callback_query.from_user.id
+    await callback_query.message.edit_text("Выберете платформу", reply_markup=download_keyboard())
+    await callback_query.answer()
 
 @router.message(F.text.lower() == "инфо")
 async def info(message: Message):
@@ -104,17 +118,6 @@ async def add_device_to_user(message: Message, user_repo: UserService):
     qr_file = FSInputFile(qr_path)
     await message.answer(link)
     await message.answer_photo(qr_file)
-
-@router.message(F.text.lower() == "Скачать приложение")
-async def download_app(message: Message):
-    kb = [
-        [types.KeyboardButton(text="ANDROID")],
-        [types.KeyboardButton(text="IOS")],
-        [types.KeyboardButton(text="WINDOWS")],
-    ]
-
-    keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
-    await message.answer("Выберете пункт в меню", reply_markup=keyboard)
 
 @router.message(F.text.lower() == "android")
 async def android(message: Message):
