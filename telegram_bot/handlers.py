@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from aiogram import F, Router, types
 from aiogram.filters import Command
-from aiogram.types import FSInputFile, Message, CallbackQuery, InlineKeyboardMarkup
+from aiogram.types import FSInputFile, Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from database.schemas import UserCreate
@@ -25,13 +25,16 @@ load_dotenv()
 
 admin_id = os.getenv("ADMIN_TG_ID")
 
-async def download_keyboard():
-    builder = InlineKeyboardBuilder()
-    builder.buttons(text="Android", call_back="Android")
-    builder.buttons(text="IOS", call_back="IOS")
-    builder.buttons(text="Windows", call_back="Windows")
-    builder.adjust(1, 1, 1, 1)
-    return builder.as_markup()
+def download_keyboard():
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Android", callback_data="Android")],
+            [InlineKeyboardButton(text="IOS", callback_data="IOS")],
+            [InlineKeyboardButton(text="Windows", callback_data="Windows")],
+        ]
+    )
+
+
 
 @router.message(Command("start"))
 async def cmd_start(message: Message, user_repo: UserService):
@@ -63,7 +66,8 @@ async def cmd_start(message: Message, user_repo: UserService):
 @router.callback_query(F.text.lower() == "ссылки на скачивание")
 async def show_download_links(callback_query: CallbackQuery):
     user_id = callback_query.from_user.id
-    await callback_query.message.edit_text("Выберете платформу", reply_markup=download_keyboard())
+    await callback_query.message.edit_text(reply_markup=download_keyboard())
+
 
 @router.message(F.text.lower() == "инфо")
 async def info(message: Message):
