@@ -68,9 +68,9 @@ async def add_device(user_name: str, telegram_id: int, volume: int, duration: in
         logger.error(f"User_id:{telegram_id}, Неудачный запрос, {ex}")
         resp = None
     connect_data = {
-        "id": resp["id"],
-        "uuid": resp["uuid"],
-        "telegram_id": resp["telegram_id"],
+        "id": resp_json["id"],
+        "uuid": resp_json["uuid"],
+        "telegram_id": resp_json["telegram_id"],
     }
     return connect_data
 
