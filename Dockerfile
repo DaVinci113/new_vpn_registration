@@ -9,13 +9,13 @@ WORKDIR /app
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Копируем файлы манифеста ПЕРВЫМИ (для кэширования слоев Docker)
-COPY ../pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock ./
 
 # Устанавливаем зависимости.
-# --frozen гарантирует использование uv.lock, --no-cache ускоряет сборку
+# --frozen гарантирует использование uv.lock
 RUN uv sync --frozen
 
 # Копируем исходный код приложения
-COPY .. /app
+COPY . /app
 
 CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
