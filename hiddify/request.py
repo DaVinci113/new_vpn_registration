@@ -60,7 +60,10 @@ async def add_device(user_name: str, telegram_id: int, volume: int, duration: in
             async with session.post(hiddify_add_user_url, json=payload_json, headers=headers) as resp:
                 logger.info(f"User_id: {telegram_id}, Добавление периода, "
                             f"Response: {resp} user_name: {user_name}")
-                resp = await resp.json()
+                resp_json = await resp.json()
+                if resp.status not in (200, 201):
+                    logger.error(f"telegram user: {telegram_id}, Ошибка Hiddify: {resp.status} {resp_json}")
+                    raise Exception(f"Ошибка {resp_json}")
     except Exception as ex:
         logger.error(f"User_id:{telegram_id}, Неудачный запрос, {ex}")
         resp = None
@@ -69,7 +72,6 @@ async def add_device(user_name: str, telegram_id: int, volume: int, duration: in
         "uuid": resp["uuid"],
         "telegram_id": resp["telegram_id"],
     }
-
     return connect_data
 
 async def all_data() -> list:
