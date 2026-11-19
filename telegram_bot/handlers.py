@@ -11,11 +11,7 @@ from database.services import UserService
 from hiddify.config import plan
 from hiddify.request import add_device, check_user_device
 from qr_code.qr_generate import Link
-from telegram_bot.message_templates import (
-    info_message,
-    instruction_message,
-    wishes_message, payment_message,
-)
+from telegram_bot.message_templates import *
 
 from dotenv import load_dotenv
 
@@ -47,6 +43,7 @@ async def cmd_start(message: Message, user_repo: UserService):
     kb = [
         [types.KeyboardButton(text="ИНФО")],
         [types.KeyboardButton(text="Инструкция")],
+        [types.KeyboardButton(text="Скачать приложение")],
         [types.KeyboardButton(text="Подключить устройство")],
         [types.KeyboardButton(text="Подписка")],
         [types.KeyboardButton(text="Пожелания")],
@@ -108,6 +105,31 @@ async def add_device_to_user(message: Message, user_repo: UserService):
     await message.answer(link)
     await message.answer_photo(qr_file)
 
+@router.message(F.text.lower() == "Скачать приложение")
+async def download_app(message: Message):
+    kb = [
+        [types.KeyboardButton(text="ANDROID")],
+        [types.KeyboardButton(text="IOS")],
+        [types.KeyboardButton(text="WINDOWS")],
+    ]
+
+    keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
+    await message.answer("Выберете пункт в меню", reply_markup=keyboard)
+
+@router.message(F.text.lower() == "android")
+async def android(message: Message):
+    await message.reply(incy_android)
+    await message.reply(happ_android)
+
+@router.message(F.text.lower() == "ios")
+async def android(message: Message):
+    await message.reply(incy_ios)
+    await message.reply(happ_ios)
+
+@router.message(F.text.lower() == "android")
+async def android(message: Message):
+    await message.reply(incy_windows)
+    await message.reply(happ_windows)
 
 @router.message(F.text.lower() == "подписка")
 async def subscribe(message: Message):

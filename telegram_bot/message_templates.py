@@ -1,8 +1,4 @@
-instruction_message = """Установить на свое устройство приложение HIDDIFY: скачать из Google Play\n
-https://play.google.com/store/apps/details?id=app.hiddify.com&pcampaignid=web_share\n
-Скачать на ПК\n
-https://github.com/hiddify/hiddify-app/releases/latest/download/Hiddify-Windows-Setup-x64.Msix\n
-Далее в МЕНЮ в нижней части экрана нажимаем ПОДКЛЮЧИТЬ УСТРОЙСТВО. В установленном приложении сканируем полученный QR код."""
+instruction_message = """Установить приложение на свое устройство\nДалее в МЕНЮ в нижней части экрана нажимаем ПОДКЛЮЧИТЬ УСТРОЙСТВО. В установленном приложении сканируем полученный QR код."""
 
 wishes_message = """Пожелания и отзывы отправляйте на почту\n
 darianikonova11@gmail.com"""
@@ -18,3 +14,14 @@ payment_message = """Перейдите по ссылке ниже. Обязат
 https://pay.cloudtips.ru/p/3b9d5cbe
 """
 
+incy_android = """GOOGLE PLAY\nhttps://play.google.com/store/apps/details?id=llc.itdev.incy&hl=ru"""
+
+incy_ios = """APPLE STORE\nhttps://apps.apple.com/us/app/incy/id6756943388"""
+
+incy_windows = """GITHUB\nhttps://github.com/INCY-DEV/incy-platforms/releases/download/latest/incy-windows-setup.exe"""
+
+happ_android = """GITHUB\nhttps://github.com/Happ-proxy/happ-android/releases/latest/download/Happ_beta.apk"""
+
+happ_ios = """APP STORE GLOBAL\nhttps://apps.apple.com/us/app/happ-proxy-utility/id6504287215"""
+
+happ_windows = """GITHUB\nhttps://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x64.exe"""
