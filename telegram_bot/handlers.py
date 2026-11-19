@@ -64,7 +64,6 @@ async def cmd_start(message: Message, user_repo: UserService):
 async def show_download_links(callback_query: CallbackQuery):
     user_id = callback_query.from_user.id
     await callback_query.message.edit_text("Выберете платформу", reply_markup=download_keyboard())
-    await callback_query.answer()
 
 @router.message(F.text.lower() == "инфо")
 async def info(message: Message):
