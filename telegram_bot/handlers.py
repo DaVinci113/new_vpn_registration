@@ -68,7 +68,7 @@ async def cmd_start(message: Message, user_repo: UserService):
     keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
     await message.answer("Выберете пункт в меню", reply_markup=keyboard)
 
-@router.callback_query(F.data() == "Ссылки на скачивание")
+@router.message(F.text.lower() == "ссылки на скачивание")
 async def show_download_links(callback: CallbackQuery):
     user_id = callback.from_user.id
     await callback.message.edit_text("Выберете Вашу платформу", reply_markup=download_keyboard())
