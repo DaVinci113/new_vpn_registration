@@ -121,19 +121,19 @@ async def add_device_to_user(message: Message, user_repo: UserService):
 
 @router.callback_query(F.text.lower() == "android")
 async def android(callback: CallbackQuery):
-    await callback.message.reply("Ссылки на скачивание:")
+    await callback.answer("Ссылки на скачивание:")
     await callback.message.answer(incy_android)
     await callback.message.answer(happ_android)
 
 @router.callback_query(F.text.lower() == "ios")
 async def android(callback: CallbackQuery):
-    await callback.message.reply("Ссылки на скачивание:")
+    await callback.answer("Ссылки на скачивание:")
     await callback.message.answer(incy_ios)
     await callback.message.answer(happ_ios)
 
 @router.callback_query(F.text.lower() == "windows")
 async def android(callback: CallbackQuery):
-    await callback.message.reply("Ссылки на скачивание:")
+    await callback.answer("Ссылки на скачивание:")
     await callback.message.answer(incy_android)
     await callback.message.answer(happ_android)
 
