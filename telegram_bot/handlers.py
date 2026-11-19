@@ -24,6 +24,7 @@ router = Router()
 load_dotenv()
 
 admin_id = os.getenv("ADMIN_TG_ID")
+payment_link = os.getenv("PAYMENT_LINK")
 
 def main_menu():
     kb = [
@@ -152,7 +153,7 @@ async def subscribe(message: Message):
                 f"оплатить")
     await  message.answer("Ваш ID для указания при оплате:\n"
                          f"{user_id}")
-    await message.answer(payment_message, reply_markup=main_menu())
+    await message.answer(payment_message+f"{payment_link}",  reply_markup=main_menu())
 
 
 @router.message(F.text.lower() == "пожелания")

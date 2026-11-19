@@ -14,8 +14,8 @@ headers = {
 
 plan = {"plan": {"volume": 500,
          "duration": 30,
-                 "devices": 4},
-        "trial": {"volume": 50,
+                 "devices": 5},
+        "trial": {"volume": 10,
              "duration": 30,
                   "devices": 1},
         }

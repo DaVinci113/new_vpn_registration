@@ -9,7 +9,6 @@ info_message = """Позволяет комфортно смотреть YouTube
 
 payment_message = """Перейдите по ссылке ниже. !!! Обязательно введите ваш ID.\n
 Перед переходом по ссылке отключите VPN\n
-https://pay.cloudtips.ru/p/3b9d5cbe
 """
 
 incy_android = """INCY\nGOOGLE PLAY\nhttps://play.google.com/store/apps/details?id=llc.itdev.incy&hl=ru"""
