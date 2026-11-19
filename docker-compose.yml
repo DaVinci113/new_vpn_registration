@@ -6,7 +6,7 @@ services:
     env_file:
       - .env
     volumes:
-      - data:/app/work_with_database/database/
+      - data:/app/database/
     restart: always
 volumes:
   data:
