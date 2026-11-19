@@ -69,9 +69,9 @@ async def cmd_start(message: Message, user_repo: UserService):
     await message.answer("Выберете пункт в меню", reply_markup=keyboard)
 
 @router.message(F.text.lower() == "ссылки на скачивание")
-async def show_download_links(callback: CallbackQuery):
-    user_id = callback.from_user.id
-    await callback.message.edit_text("Выберете Вашу платформу", reply_markup=download_keyboard())
+async def show_download_links(message: Message):
+    user_id = message.from_user.id
+    await message.edit_text("Выберете Вашу платформу", reply_markup=download_keyboard())
 
 
 @router.message(F.text.lower() == "инфо")
