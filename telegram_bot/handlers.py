@@ -30,6 +30,7 @@ def download_keyboard():
     builder.button(text="Android", callback_data="Android")
     builder.button(text="IOS", callback_data="IOS")
     builder.button(text="Windows", callback_data="Windows")
+    builder.adjust(1, 1, 1, 1)
     return builder.as_markup()
     #     inline_keyboard=[
     #         [InlineKeyboardButton(text="Android", callback_data="Android")],
@@ -67,7 +68,7 @@ async def cmd_start(message: Message, user_repo: UserService):
     keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
     await message.answer("Выберете пункт в меню", reply_markup=keyboard)
 
-@router.callback_query(F.text.lower() == "ссылки на скачивание")
+@router.callback_query(F.data() == "Ссылки на скачивание")
 async def show_download_links(callback: CallbackQuery):
     user_id = callback.from_user.id
     await callback.message.edit_text("Выберете Вашу платформу", reply_markup=download_keyboard())
