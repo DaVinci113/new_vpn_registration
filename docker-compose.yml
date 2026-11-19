@@ -1,12 +1,10 @@
-  version: '3.9'
-
-  services:
-    app:
-      build: ..
-      ports:
-        - '8000:8000'
-      volumes:
-        - data:/app/work_with_database/database/
-      restart: always
-  volumes:
-    data:
+services:
+  app:
+    build: .
+    ports:
+      - '8000:8000'
+    volumes:
+      - data:/app/work_with_database/database/
+    restart: always
+volumes:
+  data:
