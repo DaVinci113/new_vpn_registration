@@ -51,7 +51,7 @@ async def cmd_start(message: Message, user_repo: UserService):
     kb = [
         [types.KeyboardButton(text="ИНФО")],
         [types.KeyboardButton(text="Инструкция")],
-        [types.KeyboardButton(text="Скачать приложение")],
+        [types.KeyboardButton(text="Ссылки на скачивание")],
         [types.KeyboardButton(text="Подключить устройство")],
         [types.KeyboardButton(text="Подписка")],
         [types.KeyboardButton(text="Пожелания")],
