@@ -30,15 +30,8 @@ def download_keyboard():
     builder.button(text="Android", callback_data="Android")
     builder.button(text="IOS", callback_data="IOS")
     builder.button(text="Windows", callback_data="Windows")
-    builder.adjust(1, 1, 1, 1)
+    builder.adjust(2)
     return builder.as_markup()
-    #     inline_keyboard=[
-    #         [InlineKeyboardButton(text="Android", callback_data="Android")],
-    #         [InlineKeyboardButton(text="IOS", callback_data="IOS")],
-    #         [InlineKeyboardButton(text="Windows", callback_data="Windows")],
-    #     ]
-    # )
-
 
 
 @router.message(Command("start"))
@@ -65,14 +58,13 @@ async def cmd_start(message: Message, user_repo: UserService):
         [types.KeyboardButton(text="Пожелания")],
     ]
 
-    keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
+    keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
     await message.answer("Выберете пункт в меню", reply_markup=keyboard)
 
 @router.message(F.text.lower() == "ссылки на скачивание")
 async def show_download_links(message: Message):
     user_id = message.from_user.id
-    await message.edit_text("Выберете Вашу платформу", reply_markup=download_keyboard())
-
+    await message.reply("Выберете Вашу платформу", reply_markup=download_keyboard())
 
 @router.message(F.text.lower() == "инфо")
 async def info(message: Message):
@@ -127,20 +119,23 @@ async def add_device_to_user(message: Message, user_repo: UserService):
     await message.answer(link)
     await message.answer_photo(qr_file)
 
-@router.message(F.text.lower() == "android")
-async def android(message: Message):
-    await message.reply(incy_android)
-    await message.reply(happ_android)
+@router.callback_query(F.text.lower() == "android")
+async def android(callback: CallbackQuery):
+    await callback.message.reply("Ссылки на скачивание:")
+    await callback.message.answer(incy_android)
+    await callback.message.answer(happ_android)
 
-@router.message(F.text.lower() == "ios")
-async def android(message: Message):
-    await message.reply(incy_ios)
-    await message.reply(happ_ios)
+@router.callback_query(F.text.lower() == "ios")
+async def android(callback: CallbackQuery):
+    await callback.message.reply("Ссылки на скачивание:")
+    await callback.message.answer(incy_ios)
+    await callback.message.answer(happ_ios)
 
-@router.message(F.text.lower() == "android")
-async def android(message: Message):
-    await message.reply(incy_windows)
-    await message.reply(happ_windows)
+@router.callback_query(F.text.lower() == "windows")
+async def android(callback: CallbackQuery):
+    await callback.message.reply("Ссылки на скачивание:")
+    await callback.message.answer(incy_android)
+    await callback.message.answer(happ_android)
 
 @router.message(F.text.lower() == "подписка")
 async def subscribe(message: Message):
