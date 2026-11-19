@@ -25,6 +25,23 @@ load_dotenv()
 
 admin_id = os.getenv("ADMIN_TG_ID")
 
+def main_menu():
+    kb = [
+        [types.KeyboardButton(text="ИНФО")],
+        [types.KeyboardButton(text="Инструкция")],
+        [types.KeyboardButton(text="Ссылки на скачивание")],
+        [types.KeyboardButton(text="Подключить устройство")],
+        [types.KeyboardButton(text="Подписка")],
+        [types.KeyboardButton(text="Пожелания")],
+    ]
+
+    return types.ReplyKeyboardMarkup(
+        keyboard=kb,
+        resize_keyboard=True,
+        one_time_keyboard=False,
+        input_field_placeholder="Выберете пункт в меню",
+    )
+
 def download_keyboard():
     builder = InlineKeyboardBuilder()
     builder.button(text="Android", callback_data="Android")
@@ -49,17 +66,8 @@ async def cmd_start(message: Message, user_repo: UserService):
         end_plan=current_date+timedelta(days=30),
         )
         await user_repo.create(new_user)
-    kb = [
-        [types.KeyboardButton(text="ИНФО")],
-        [types.KeyboardButton(text="Инструкция")],
-        [types.KeyboardButton(text="Ссылки на скачивание")],
-        [types.KeyboardButton(text="Подключить устройство")],
-        [types.KeyboardButton(text="Подписка")],
-        [types.KeyboardButton(text="Пожелания")],
-    ]
 
-    keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True, one_time_keyboard=False)
-    await message.answer("Выберете пункт в меню", reply_markup=keyboard)
+    await message.answer("Выберете пункт в меню", reply_markup=main_menu())
 
 @router.message(F.text.lower() == "ссылки на скачивание")
 async def show_download_links(message: Message):
@@ -117,25 +125,25 @@ async def add_device_to_user(message: Message, user_repo: UserService):
     qr_path = link_generator.generate_qr_code()
     qr_file = FSInputFile(qr_path)
     await message.answer(link)
-    await message.answer_photo(qr_file)
+    await message.answer_photo(qr_file, reply_markup=main_menu())
 
 @router.callback_query(F.data == "Android")
 async def android(callback: CallbackQuery):
     await callback.answer("Ссылки на скачивание:")
     await callback.message.answer(incy_android)
-    await callback.message.answer(happ_android)
+    await callback.message.answer(happ_android, reply_markup=main_menu())
 
 @router.callback_query(F.data == "IOS")
 async def android(callback: CallbackQuery):
     await callback.answer("Ссылки на скачивание:")
     await callback.message.answer(incy_ios)
-    await callback.message.answer(happ_ios)
+    await callback.message.answer(happ_ios, reply_markup=main_menu())
 
 @router.callback_query(F.data == "Windows")
 async def android(callback: CallbackQuery):
     await callback.answer("Ссылки на скачивание:")
     await callback.message.answer(incy_android)
-    await callback.message.answer(happ_android)
+    await callback.message.answer(happ_android, reply_markup=main_menu())
 
 @router.message(F.text.lower() == "подписка")
 async def subscribe(message: Message):
@@ -144,7 +152,7 @@ async def subscribe(message: Message):
                 f"оплатить")
     await  message.answer("Ваш ID для указания при оплате:\n"
                          f"{user_id}")
-    await message.answer(payment_message)
+    await message.answer(payment_message, reply_markup=main_menu())
 
 
 @router.message(F.text.lower() == "пожелания")
@@ -152,6 +160,6 @@ async def wishes(message: Message):
     user_id = message.from_user.id
     logger.info(f"User:{user_id} выбрал "
                 f"Пожелания")
-    await message.reply(wishes_message)
+    await message.reply(wishes_message, reply_markup=main_menu())
 
 
