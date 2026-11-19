@@ -58,7 +58,7 @@ async def cmd_start(message: Message, user_repo: UserService):
         [types.KeyboardButton(text="Пожелания")],
     ]
 
-    keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
+    keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True, one_time_keyboard=False)
     await message.answer("Выберете пункт в меню", reply_markup=keyboard)
 
 @router.message(F.text.lower() == "ссылки на скачивание")
@@ -103,7 +103,7 @@ async def add_device_to_user(message: Message, user_repo: UserService):
     if user_devices >= devices_count:
         await message.reply("К сожалению Вы не можете подключить больше устройств(((")
         if user_data.free_plan:
-            await message.reply("Можете оплатить подписку и у Вас появится возможность подключить еще 3 устройства. И безлимит")
+            await message.reply("Можете оплатить подписку и у Вас появится возможность подключить еще 4 устройства. И безлимит")
         return
     connect_data = await add_device(
         user_name=user_name,
