@@ -24,7 +24,8 @@ router = Router()
 load_dotenv()
 
 admin_id = os.getenv("ADMIN_TG_ID")
-payment_link = os.getenv("PAYMENT_LINK")
+payment_link_family = os.getenv("PAYMENT_LINK_FAMILY")
+payment_link_family_plus = os.getenv("PAYMENT_LINK_FAMILY_PLUS")
 
 def main_menu():
     kb = [
@@ -48,6 +49,13 @@ def download_keyboard():
     builder.button(text="Android", callback_data="Android")
     builder.button(text="IOS", callback_data="IOS")
     builder.button(text="Windows", callback_data="Windows")
+    builder.adjust(2)
+    return builder.as_markup()
+
+def payment_keyboard():
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Семейный", callback_data="family")
+    builder.button(text="Семейный+", callback_data="family_plus")
     builder.adjust(2)
     return builder.as_markup()
 
@@ -153,7 +161,17 @@ async def subscribe(message: Message):
                 f"оплатить")
     await  message.answer("Ваш ID для указания при оплате:\n"
                          f"{user_id}")
-    await message.answer(payment_message+f"{payment_link}",  reply_markup=main_menu())
+    await message.answer("Выберете тариф",  reply_markup=payment_keyboard())
+
+@router.callback_query(F.data == "family")
+async def subscribe_family(callback: CallbackQuery):
+    await callback.answer(payment_message)
+    await callback.message.answer(payment_link_family)
+
+@router.callback_query(F.data == "family_plus")
+async def subscribe_family_plus(callback: CallbackQuery):
+    await callback.answer(payment_message)
+    await callback.message.answer(payment_link_family_plus)
 
 
 @router.message(F.text.lower() == "пожелания")
