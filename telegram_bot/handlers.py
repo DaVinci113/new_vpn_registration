@@ -138,19 +138,19 @@ async def add_device_to_user(message: Message, user_repo: UserService):
 
 @router.callback_query(F.data == "Android")
 async def android(callback: CallbackQuery):
-    await callback.answer("Ссылки на скачивание:")
+    await callback.message.answer("Ссылки на скачивание:")
     await callback.message.answer(incy_android)
     await callback.message.answer(happ_android, reply_markup=main_menu())
 
 @router.callback_query(F.data == "IOS")
 async def android(callback: CallbackQuery):
-    await callback.answer("Ссылки на скачивание:")
+    await callback.message.answer("Ссылки на скачивание:")
     await callback.message.answer(incy_ios)
     await callback.message.answer(happ_ios, reply_markup=main_menu())
 
 @router.callback_query(F.data == "Windows")
 async def android(callback: CallbackQuery):
-    await callback.answer("Ссылки на скачивание:")
+    await callback.message.answer("Ссылки на скачивание:")
     await callback.message.answer(incy_android)
     await callback.message.answer(happ_android, reply_markup=main_menu())
 
@@ -165,12 +165,12 @@ async def subscribe(message: Message):
 
 @router.callback_query(F.data == "family")
 async def subscribe_family(callback: CallbackQuery):
-    await callback.answer(payment_message)
+    await callback.message.answer(payment_message)
     await callback.message.answer(payment_link_family)
 
 @router.callback_query(F.data == "family_plus")
 async def subscribe_family_plus(callback: CallbackQuery):
-    await callback.answer(payment_message)
+    await callback.message.answer(payment_message)
     await callback.message.answer(payment_link_family_plus)
 
 

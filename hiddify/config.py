@@ -12,9 +12,9 @@ headers = {
     "Hiddify-API-Key": api_key
 }
 
-plan = {"plan": {"volume": 500,
+plan = {"plan_a": {"volume": 100,
          "duration": 30,
-                 "devices": 5},
+                 "devices": 1},
         "trial": {"volume": 10,
              "duration": 30,
                   "devices": 1},
