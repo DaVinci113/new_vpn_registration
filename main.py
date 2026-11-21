@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import sys
 
 import aiohttp
 from aiogram import Bot, Dispatcher
@@ -13,8 +14,13 @@ from core.middlewares.databs import DatabaseMiddleware
 from database.services import create_table
 from telegram_bot.handlers import router
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 load_dotenv()
 
