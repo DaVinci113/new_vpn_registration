@@ -74,7 +74,6 @@ async def cmd_start(message: Message, user_repo: UserService, bot: Bot):
     user_name = message.from_user.username
     if await user_repo.get_user_by_telegram_id(user_id):
         await message.reply(f"С возвращением {user_name}")
-        return
     else:
         new_user = UserCreate(
         telegram_id=user_id,
@@ -184,28 +183,26 @@ async def subscribe(message: Message):
     await message.answer("Выберете тариф",  reply_markup=payment_keyboard())
 
 @router.callback_query(F.data == "family")
-async def subscribe_family(callback: CallbackQuery):
+async def subscribe_family(callback: CallbackQuery, bot: Bot):
     user_id = callback.from_user.id
     logger.info(f"User:{user_id} выбрал "
                 f"оплатить family")
+    await bot.send_message(chat_id=admin_tg_id,
+                           text=f"User:{user_id} выбрал оплатить family"
+                           )
     await callback.message.answer(payment_message)
     await callback.message.answer(payment_link_family)
 
 @router.callback_query(F.data == "family_plus")
-async def subscribe_family_plus(callback: CallbackQuery):
+async def subscribe_family_plus(callback: CallbackQuery, bot: Bot):
     user_id = callback.from_user.id
     logger.info(f"User:{user_id} выбрал "
                 f"оплатить family_plus")
+    await bot.send_message(chat_id=admin_tg_id,
+                           text=f"User:{user_id} выбрал оплатить family_plus"
+                           )
     await callback.message.answer(payment_message)
     await callback.message.answer(payment_link_family_plus)
-
-@router.callback_query(F.data == payment_link_family or F.data == payment_link_family_plus)
-async def payment_notification(callback: CallbackQuery, bot: Bot):
-    user_id = callback.from_user.id
-    await bot.send_message(
-        chat_id=admin_tg_id,
-        text=f"Пользователь {user_id} перешел по ссылке для оплаты",
-    )
 
 @router.message(F.text.lower() == "пожелания")
 async def wishes(message: Message):
