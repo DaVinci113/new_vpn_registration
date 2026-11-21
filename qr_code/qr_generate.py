@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 url = os.getenv("HIDDIFY_URL")
-user_proxy_path = os.getenv("PROXY_PATH_FOR_USER_LINK")
+user_proxy_path = os.getenv("PROXY_PATH_USER")
 
 
 class Link:
