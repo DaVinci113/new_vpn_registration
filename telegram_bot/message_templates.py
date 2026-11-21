@@ -11,14 +11,22 @@ info_message = """Позволяет по одной подписке подкл
 
 payment_message = """Перейдите по ссылке ниже. !!! Обязательно введите ваш ID.\n"""
 
-incy_android = """INCY\nGOOGLE PLAY\nhttps://play.google.com/store/apps/details?id=llc.itdev.incy&hl=ru"""
+link_message = """Выберете один из вариантов: HIDDIFY, INCY, HAPP"""
 
-incy_ios = """INCY\nAPPLE STORE\nhttps://apps.apple.com/us/app/incy/id6756943388"""
+link_android = """
+HIDDIFY - https://play.google.com/store/apps/details?id=app.hiddify.com\n\n
+INCY - https://play.google.com/store/apps/details?id=llc.itdev.incy&hl=ru\n\n
+HAPP - https://github.com/Happ-proxy/happ-android/releases/latest/download/Happ_beta.apk\n
+"""
 
-incy_windows = """INCY\nGITHUB\nhttps://github.com/INCY-DEV/incy-platforms/releases/download/latest/incy-windows-setup.exe"""
+link_ios = """
+HIDDIFY - https://apps.apple.com/us/app/hiddify-proxy-vpn/id6596777532\n\n
+INCY - https://apps.apple.com/us/app/incy/id6756943388\n\n
+HAPP - https://apps.apple.com/us/app/happ-proxy-utility/id6504287215\n
+"""
 
-happ_android = """HAPP\nGITHUB\nhttps://github.com/Happ-proxy/happ-android/releases/latest/download/Happ_beta.apk"""
-
-happ_ios = """HAPP\nAPP STORE GLOBAL\nhttps://apps.apple.com/us/app/happ-proxy-utility/id6504287215"""
-
-happ_windows = """HAPP\nGITHUB\nhttps://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x64.exe"""
+link_windows = """
+HIDDIFY - https://github.com/hiddify/hiddify-app/releases/latest/download/Hiddify-Windows-Setup-x64.exe\n\n
+INCY - https://github.com/INCY-DEV/incy-platforms/releases/download/latest/incy-windows-setup.exe\n\n
+HAPP - https://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x64.exe\n
+"""
