@@ -184,16 +184,16 @@ async def subscribe(message: Message):
     await message.answer("Выберете тариф",  reply_markup=payment_keyboard())
 
 @router.callback_query(F.data == "family")
-async def subscribe_family(callback: CallbackQuery, message: Message):
-    user_id = message.from_user.id
+async def subscribe_family(callback: CallbackQuery):
+    user_id = callback.from_user.id
     logger.info(f"User:{user_id} выбрал "
                 f"оплатить family")
     await callback.message.answer(payment_message)
     await callback.message.answer(payment_link_family)
 
 @router.callback_query(F.data == "family_plus")
-async def subscribe_family_plus(callback: CallbackQuery, message: Message):
-    user_id = callback.message.from_user.id
+async def subscribe_family_plus(callback: CallbackQuery):
+    user_id = callback.from_user.id
     logger.info(f"User:{user_id} выбрал "
                 f"оплатить family_plus")
     await callback.message.answer(payment_message)
