@@ -199,6 +199,13 @@ async def subscribe_family_plus(callback: CallbackQuery):
     await callback.message.answer(payment_message)
     await callback.message.answer(payment_link_family_plus)
 
+@router.callback_query(F.data == payment_link_family or F.data == payment_link_family_plus)
+async def payment_notification(callback: CallbackQuery, bot: Bot):
+    user_id = callback.from_user.id
+    await bot.send_message(
+        chat_id=admin_tg_id,
+        text=f"Пользователь {user_id} перешел по ссылке для оплаты",
+    )
 
 @router.message(F.text.lower() == "пожелания")
 async def wishes(message: Message):
