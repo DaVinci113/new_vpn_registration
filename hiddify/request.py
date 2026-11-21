@@ -2,6 +2,7 @@ import asyncio
 import datetime
 import logging
 import os
+import sys
 
 import aiohttp
 from dotenv import load_dotenv
@@ -9,6 +10,13 @@ from dotenv import load_dotenv
 from hiddify.config import headers
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
 load_dotenv()
 
 api_url = os.getenv("API_URL")
